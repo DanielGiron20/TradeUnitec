@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "208814975305",
+    "project_id": "tradeunitec",
+    "storage_bucket": "tradeunitec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208814975305:android:c0ea82a36024d74d8cd298",
+        "android_client_info": {
+          "package_name": "com.tradeunitec.push"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5WwubrAaWKYak9se1WUw_664bl5AQYcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
