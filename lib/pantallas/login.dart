@@ -92,7 +92,7 @@ class Login extends StatelessWidget {
                 const SizedBox(height: 20),
                 TextButton(
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.blueAccent,
+                    foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                     textStyle: const TextStyle(
                         fontSize: 16, decoration: TextDecoration.underline),
                   ),
