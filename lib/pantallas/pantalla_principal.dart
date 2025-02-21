@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tradeunitec/pantallas/producto.dart';
 import 'package:tradeunitec/pantallas/rutas.dart';
 
 
@@ -85,13 +86,15 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                     ),
                     itemCount: productos.length,
                     itemBuilder: (context, index) {
-                      var producto = productos[index];
+                    var producto = productos[index];
                       return ProductCard(
                         nombre: producto['name'],
                         descripcion: producto['descripcion'],
                         imagenUrl: producto['imagen'],
+                        userId: producto['userid'],   
                       );
                     },
+
                   );
                 },
               ),
@@ -107,50 +110,67 @@ class ProductCard extends StatelessWidget {
   final String nombre;
   final String descripcion;
   final String imagenUrl;
+  final String userId;
 
   const ProductCard({
     super.key,
     required this.nombre,
     required this.descripcion,
     required this.imagenUrl,
+    required this.userId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-              child: Image.network(
-                imagenUrl,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PantallaProducto(
+              nombre: nombre,
+              descripcion: descripcion,
+              imagenUrl: imagenUrl,
+              userid: userId,
+            ),
+          ),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                child: Image.network(
+                  imagenUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              nombre,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                nombre,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              descripcion,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.grey),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                descripcion,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.grey),
+              ),
             ),
-          ),
-          const SizedBox(height: 5),
-        ],
+            const SizedBox(height: 5),
+          ],
+        ),
       ),
     );
   }
