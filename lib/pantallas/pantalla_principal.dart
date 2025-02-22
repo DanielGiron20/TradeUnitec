@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tradeunitec/Basededatos/db_helper.dart';
+import 'package:tradeunitec/Basededatos/usuario.dart';
 import 'package:tradeunitec/pantallas/producto.dart';
 import 'package:tradeunitec/pantallas/rutas.dart';
-
-
 
 class PantallaPrincipal extends StatefulWidget {
   const PantallaPrincipal({super.key});
@@ -14,6 +15,28 @@ class PantallaPrincipal extends StatefulWidget {
 
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
   String categoriaSeleccionada = "Todos";
+  late List<Usuario> usuarios;
+  late Usuario currentUser;
+  bool isLogged = false;
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  void getUser() async {
+    usuarios = (await DBHelper.queryUsuarios()).cast<Usuario>();
+    if (usuarios.isNotEmpty) {
+      setState(() {
+        currentUser = usuarios.first;
+        isLogged = true;
+      });
+      Get.snackbar("Bienvenido", "Bienvenido ${currentUser.name}");
+    } else {
+      print("No hay usuarios disponibles");
+      Get.snackbar("Error", "No hay usuarios disponibles");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +45,27 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         appBar: AppBar(
           title: const Text('Trade Unitec'),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.person),
-              tooltip: 'Iniciar sesión',
-              onPressed: () {
-                Navigator.pushNamed(
-                    context, MyRoutes.Login.name);
-              },
-            ),
+            isLogged
+                ? GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, MyRoutes.Login.name);
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(currentUser.logo),
+                    ),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.person),
+                    tooltip: 'Iniciar sesión',
+                    onPressed: () {
+                      Navigator.pushNamed(context, MyRoutes.Login.name);
+                    },
+                  ),
           ],
         ),
         body: Column(
           children: [
             const SizedBox(height: 10),
-           
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -56,11 +86,12 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               ),
             ),
             const SizedBox(height: 10),
-           
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: categoriaSeleccionada == "Todos"
-                    ? FirebaseFirestore.instance.collection('products').snapshots()
+                    ? FirebaseFirestore.instance
+                        .collection('products')
+                        .snapshots()
                     : FirebaseFirestore.instance
                         .collection('products')
                         .where('category', isEqualTo: categoriaSeleccionada)
@@ -71,14 +102,16 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text("No hay productos disponibles"));
+                    return const Center(
+                        child: Text("No hay productos disponibles"));
                   }
 
                   var productos = snapshot.data!.docs;
 
                   return GridView.builder(
                     padding: const EdgeInsets.all(10),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
@@ -86,15 +119,14 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                     ),
                     itemCount: productos.length,
                     itemBuilder: (context, index) {
-                    var producto = productos[index];
+                      var producto = productos[index];
                       return ProductCard(
                         nombre: producto['name'],
                         descripcion: producto['descripcion'],
                         imagenUrl: producto['imagen'],
-                        userId: producto['userid'],   
+                        userId: producto['userid'],
                       );
                     },
-
                   );
                 },
               ),
@@ -143,12 +175,14 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(10)),
                 child: Image.network(
                   imagenUrl,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.image_not_supported),
                 ),
               ),
             ),

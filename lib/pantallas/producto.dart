@@ -12,7 +12,7 @@ class PantallaProducto extends StatefulWidget {
     required this.nombre,
     required this.descripcion,
     required this.imagenUrl,
-    required this.userid, 
+    required this.userid,
   });
 
   @override

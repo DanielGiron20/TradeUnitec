@@ -129,56 +129,62 @@ class _LogonState extends State<Logon> {
   }
 
   Future<void> _pickImage() async {
-  final ImagePicker _picker = ImagePicker();
-  
-  final pickedFile = await showDialog<XFile>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Selecciona una fuente de imagen'),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () async {
-            Navigator.pop(context, await _picker.pickImage(source: ImageSource.camera));
-          },
-          child: const Text('Cámara'),
-        ),
-        TextButton(
-          onPressed: () async {
-            Navigator.pop(context, await _picker.pickImage(source: ImageSource.gallery));
-          },
-          child: const Text('Galería'),
-        ),
-      ],
-    ),
-  );
+    final ImagePicker _picker = ImagePicker();
 
-  if (pickedFile != null) {
-    setState(() {
-      _logoFile = File(pickedFile.path);
-    });
+    final pickedFile = await showDialog<XFile>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Selecciona una fuente de imagen'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(
+                  context, await _picker.pickImage(source: ImageSource.camera));
+            },
+            child: const Text('Cámara'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context,
+                  await _picker.pickImage(source: ImageSource.gallery));
+            },
+            child: const Text('Galería'),
+          ),
+        ],
+      ),
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _logoFile = File(pickedFile.path);
+      });
+    }
   }
-}
-
 
   Future<void> _registerSeller(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
     loadingDialog.show(context);
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _correoController.text.trim(),
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _correoController.text.toLowerCase().trim(),
         password: _contrasenaController.text.trim(),
       );
       await userCredential.user!.sendEmailVerification();
 
       String logoUrl = '';
       if (_logoFile != null) {
-        final storageRef = FirebaseStorage.instance.ref('logos/${DateTime.now().toIso8601String()}');
+        final storageRef = FirebaseStorage.instance.refFromURL(
+            'gs://pumitasemprendedores.appspot.com/logos/${DateTime.now().toIso8601String()}');
         await storageRef.putFile(_logoFile!);
         logoUrl = await storageRef.getDownloadURL();
       }
 
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
         'uid': userCredential.user!.uid,
         'name': _nombreController.text.trim(),
         'correo': _correoController.text.trim(),
@@ -186,7 +192,8 @@ class _LogonState extends State<Logon> {
         'logo': logoUrl
       });
 
-      Get.snackbar('Registro exitoso', 'Revisa tu correo para verificar la cuenta.');
+      Get.snackbar(
+          'Registro exitoso', 'Revisa tu correo para verificar la cuenta.');
       Navigator.pop(context);
     } catch (e) {
       Get.snackbar('Error', 'Error al registrar el vendedor: ${e.toString()}');
@@ -197,7 +204,8 @@ class _LogonState extends State<Logon> {
 
   String? _validateNombre(String? value) {
     if (value == null || value.isEmpty) return 'El nombre es obligatorio';
-    if (value.length < 3 || value.length > 20) return 'Debe tener entre 3 y 20 caracteres';
+    if (value.length < 3 || value.length > 20)
+      return 'Debe tener entre 3 y 20 caracteres';
     return null;
   }
 
@@ -207,12 +215,14 @@ class _LogonState extends State<Logon> {
   }
 
   String? _validateNumero(String? value) {
-    if (value == null || value.isEmpty || value.length != 8) return 'Debe tener 8 dígitos';
+    if (value == null || value.isEmpty || value.length != 8)
+      return 'Debe tener 8 dígitos';
     return null;
   }
 
   String? _validateContrasena(String? value) {
-    if (value == null || value.isEmpty || value.length < 6) return 'Debe tener al menos 6 caracteres';
+    if (value == null || value.isEmpty || value.length < 6)
+      return 'Debe tener al menos 6 caracteres';
     return null;
   }
 }

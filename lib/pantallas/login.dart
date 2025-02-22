@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tradeunitec/Basededatos/usuario.dart';
+import 'package:tradeunitec/Basededatos/usuario_controller.dart';
 import 'package:tradeunitec/pantallas/rutas.dart';
 import 'package:tradeunitec/widgets/custom_input.dart';
 
@@ -12,20 +15,86 @@ class Login extends StatelessWidget {
 
   Future<void> _login(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      // Tomando los valores de la clase Logon
+
+      // Autenticación mediante Firebase
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+        password: passwordController.text,
       );
-      Get.snackbar("Éxito", "Inicio de sesión exitoso",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white);
-      Navigator.pop(context);
+      User? user = FirebaseAuth.instance.currentUser;
+      await user?.reload();
+      if (user != null) {
+        String userId = userCredential.user?.uid ?? '';
+        print('ID del usuario: $userId');
+        final QuerySnapshot userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('uid', isEqualTo: userId)
+            .limit(1)
+            .get();
+
+        if (userQuery.docs.isEmpty) {
+          Get.snackbar('Error', 'Usuario no encontrado',
+              backgroundColor: Colors.red, colorText: Colors.white);
+          Navigator.of(context).pop();
+          return;
+        } else {
+          final userData = userQuery.docs.first.data() as Map<String, dynamic>;
+
+          // Aquí extraemos los campos que existen en la colección Firestore
+          String name = userData['name'] ?? '';
+          String description = userData['description'] ?? '';
+          String logo = userData['logo'] ?? '';
+          String number = userData['numero'] ?? '';
+
+          Get.snackbar('Éxito', 'Inicio de sesión exitoso',
+              backgroundColor: Colors.green, colorText: Colors.white);
+
+          // Creamos el objeto Usuario con los datos obtenidos
+          Usuario usuario = Usuario(
+            id: userQuery.docs.first.id,
+            uid: userId,
+            name: name,
+            email: emailController.text.trim(),
+            description: description,
+            logo: logo,
+            phoneNumber: number,
+          );
+          final UsuarioController usuarioController =
+              Get.put(UsuarioController());
+
+          await usuarioController.addUsuario(
+            id: usuario.id,
+            uid: usuario.uid,
+            name: usuario.name,
+            email: usuario.email,
+            phoneNumber: usuario.phoneNumber,
+            description: usuario.description,
+            logo: usuario.logo,
+          );
+        }
+      } else {
+        Get.snackbar('Error', 'Por favor, confirma el correo de verificación.',
+            backgroundColor: Colors.red, colorText: Colors.white);
+        Navigator.of(context).pop();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        Get.snackbar('Error', 'Usuario no encontrado',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else if (e.code == 'wrong-password') {
+        Get.snackbar('Error', 'Contraseña incorrecta',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      } else {
+        Get.snackbar('Error', 'Error en la autenticación: ${e.message}',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+      print(
+          'Error en la autenticación: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ${e.message}');
     } catch (e) {
-      Get.snackbar("Error", "Correo o contraseña incorrectos",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white);
+      Get.snackbar('Error', 'Error inesperado: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 
