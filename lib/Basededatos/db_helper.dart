@@ -16,13 +16,17 @@ class DBHelper {
         path,
         version: _version,
         onCreate: (db, version) {
-          db.execute("CREATE TABLE $_tableNameUsuarios("
-              "id TEXT PRIMARY KEY,"
-              "uid TEXT,"
-              "name TEXT,"
-              "email TEXT,"
-              "description TEXT,"
-              "logo TEXT)");
+          // Tabla de Usuarios
+          db.execute(
+            "CREATE TABLE $_tableNameUsuarios("
+            "id TEXT PRIMARY KEY,"
+            "uid TEXT,"
+            "name TEXT,"
+            "email TEXT,"
+            "description TEXT,"
+            "logo TEXT,"
+            "phoneNumber TEXT)",
+          );
         },
       );
     } catch (e) {
@@ -30,7 +34,7 @@ class DBHelper {
     }
   }
 
-  // Inserta un nuevo usuario
+  // Método para insertar un usuario
   static Future<int> insertUsuario(Usuario usuario) async {
     try {
       return await _db?.insert(_tableNameUsuarios, usuario.toJson()) ?? 0;
@@ -40,7 +44,7 @@ class DBHelper {
     }
   }
 
-  // Consulta todos los usuarios
+  // Método para obtener todos los usuarios
   static Future<List<Usuario>> queryUsuarios() async {
     try {
       final List<Map<String, dynamic>> usuariosMapList =
@@ -54,13 +58,13 @@ class DBHelper {
     }
   }
 
-  // Elimina un usuario
-  static Future<int> deleteUsuario(String id) async {
+  // Método para eliminar un usuario
+  static Future<int> deleteUsuario(Usuario usuario) async {
     try {
       return await _db!.delete(
         _tableNameUsuarios,
         where: 'id = ?',
-        whereArgs: [id],
+        whereArgs: [usuario.id],
       );
     } catch (e) {
       print("Error al eliminar usuario: $e");
@@ -68,7 +72,7 @@ class DBHelper {
     }
   }
 
-  // Actualiza un usuario
+  // Método para actualizar un usuario
   static Future<int> updateUsuario(
       String id, Map<String, dynamic> updates) async {
     try {

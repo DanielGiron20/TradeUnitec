@@ -15,7 +15,6 @@ class PantallaPrincipal extends StatefulWidget {
 
 class _PantallaPrincipalState extends State<PantallaPrincipal> {
   String categoriaSeleccionada = "Todos";
-  late List<Usuario> usuarios;
   late Usuario currentUser;
   bool isLogged = false;
   @override
@@ -25,8 +24,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   void getUser() async {
-    usuarios = (await DBHelper.queryUsuarios()).cast<Usuario>();
-    if (usuarios.isNotEmpty) {
+    List<Usuario> usuarios = (await DBHelper.queryUsuarios()).cast();
+    if (usuarios.length > 0) {
       setState(() {
         currentUser = usuarios.first;
         isLogged = true;
@@ -58,7 +57,10 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                     icon: const Icon(Icons.person),
                     tooltip: 'Iniciar sesión',
                     onPressed: () {
-                      Navigator.pushNamed(context, MyRoutes.Login.name);
+                      Navigator.pushNamed(context, MyRoutes.Login.name)
+                          .then((value) => setState(() {
+                                getUser();
+                              }));
                     },
                   ),
           ],

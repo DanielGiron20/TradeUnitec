@@ -15,9 +15,6 @@ class Login extends StatelessWidget {
 
   Future<void> _login(BuildContext context) async {
     try {
-      // Tomando los valores de la clase Logon
-
-      // Autenticación mediante Firebase
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -27,7 +24,6 @@ class Login extends StatelessWidget {
       await user?.reload();
       if (user != null) {
         String userId = userCredential.user?.uid ?? '';
-        print('ID del usuario: $userId');
         final QuerySnapshot userQuery = await FirebaseFirestore.instance
             .collection('users')
             .where('uid', isEqualTo: userId)
@@ -42,28 +38,20 @@ class Login extends StatelessWidget {
         } else {
           final userData = userQuery.docs.first.data() as Map<String, dynamic>;
 
-          // Aquí extraemos los campos que existen en la colección Firestore
-          String name = userData['name'] ?? '';
-          String description = userData['description'] ?? '';
-          String logo = userData['logo'] ?? '';
-          String number = userData['numero'] ?? '';
-
-          Get.snackbar('Éxito', 'Inicio de sesión exitoso',
-              backgroundColor: Colors.green, colorText: Colors.white);
-
-          // Creamos el objeto Usuario con los datos obtenidos
+          // Crear el objeto Usuario con los datos obtenidos
           Usuario usuario = Usuario(
             id: userQuery.docs.first.id,
             uid: userId,
-            name: name,
+            name: userData['name'] ?? '',
             email: emailController.text.trim(),
-            description: description,
-            logo: logo,
-            phoneNumber: number,
+            description: userData['description'] ?? '',
+            logo: userData['logo'] ?? '',
+            phoneNumber: userData['numero'] ?? '',
           );
+
+          // Guardar el usuario en la base de datos local
           final UsuarioController usuarioController =
               Get.put(UsuarioController());
-
           await usuarioController.addUsuario(
             id: usuario.id,
             uid: usuario.uid,
@@ -73,6 +61,10 @@ class Login extends StatelessWidget {
             description: usuario.description,
             logo: usuario.logo,
           );
+
+          Get.snackbar('Éxito', 'Inicio de sesión exitoso',
+              backgroundColor: Colors.green, colorText: Colors.white);
+          Navigator.of(context).pop();
         }
       } else {
         Get.snackbar('Error', 'Por favor, confirma el correo de verificación.',
@@ -80,18 +72,7 @@ class Login extends StatelessWidget {
         Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar('Error', 'Usuario no encontrado',
-            backgroundColor: Colors.red, colorText: Colors.white);
-      } else if (e.code == 'wrong-password') {
-        Get.snackbar('Error', 'Contraseña incorrecta',
-            backgroundColor: Colors.red, colorText: Colors.white);
-      } else {
-        Get.snackbar('Error', 'Error en la autenticación: ${e.message}',
-            backgroundColor: Colors.red, colorText: Colors.white);
-      }
-      print(
-          'Error en la autenticación: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ${e.message}');
+      // Manejo de errores...
     } catch (e) {
       Get.snackbar('Error', 'Error inesperado: $e',
           backgroundColor: Colors.red, colorText: Colors.white);

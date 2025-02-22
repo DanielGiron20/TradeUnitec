@@ -19,25 +19,25 @@ class Usuario {
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
     return Usuario(
-      id: json['id'] ?? "",
-      uid: json['uid'] ?? "", // Se cambió de 'UID' a 'uid'
-      name: json['name'] ?? "",
-      email: json['email'] ?? "",
-      description: json['description'] ?? "",
-      logo: json['logo'] ?? "",
-      phoneNumber: json['phoneNumber'] ?? 0,
+      id: json['id'] ?? '',
+      uid: json['uid'] ?? '',
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      description: json['description'] ?? '',
+      logo: json['logo'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'uid': uid, // Se cambió de 'UID' a 'uid'
+      'uid': uid,
       'name': name,
       'email': email,
       'description': description,
       'logo': logo,
-      'phoneNumber': phoneNumber
+      'phoneNumber': phoneNumber,
     };
   }
 }
