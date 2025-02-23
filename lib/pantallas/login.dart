@@ -64,7 +64,7 @@ class Login extends StatelessWidget {
 
           Get.snackbar('Éxito', 'Inicio de sesión exitoso',
               backgroundColor: Colors.green, colorText: Colors.white);
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(usuario);
         }
       } else {
         Get.snackbar('Error', 'Por favor, confirma el correo de verificación.',

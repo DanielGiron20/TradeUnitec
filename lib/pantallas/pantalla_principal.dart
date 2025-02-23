@@ -47,7 +47,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
             isLogged
                 ? GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, MyRoutes.Login.name);
+                      Navigator.pushNamed(context, MyRoutes.Perfil.name,
+                          arguments: currentUser);
                     },
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(currentUser.logo),
@@ -58,9 +59,14 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                     tooltip: 'Iniciar sesión',
                     onPressed: () {
                       Navigator.pushNamed(context, MyRoutes.Login.name)
-                          .then((value) => setState(() {
-                                getUser();
-                              }));
+                          .then((value) {
+                        if (value is Usuario) {
+                          setState(() {
+                            currentUser = value;
+                            isLogged = true;
+                          });
+                        }
+                      });
                     },
                   ),
           ],
