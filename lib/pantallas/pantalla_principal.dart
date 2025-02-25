@@ -24,16 +24,22 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 
   void getUser() async {
-    List<Usuario> usuarios = (await DBHelper.queryUsuarios()).cast();
-    if (usuarios.length > 0) {
-      setState(() {
-        currentUser = usuarios.first;
-        isLogged = true;
-      });
-      Get.snackbar("Bienvenido", "Bienvenido ${currentUser.name}");
-    } else {
-      print("No hay usuarios disponibles");
-      Get.snackbar("Error", "No hay usuarios disponibles");
+    try {
+      final db = await DbHelper().database;
+      final List<Map<String, dynamic>> usuarios = await db.query('users');
+
+      if (usuarios.isNotEmpty) {
+        setState(() {
+          currentUser = Usuario.fromMap(usuarios.first);
+          isLogged = true;
+        });
+        Get.snackbar("Bienvenido", "Bienvenido ${currentUser.name}");
+      } else {
+        print("No hay usuarios disponibles");
+        Get.snackbar("Error", "No hay usuarios disponibles");
+      }
+    } catch (e) {
+      print("Error al obtener el usuario: $e");
     }
   }
 

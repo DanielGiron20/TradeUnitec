@@ -1,90 +1,87 @@
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:tradeunitec/BaseDeDatos/usuario.dart';
+import 'package:tradeunitec/Basededatos/usuario.dart';
 
-class DBHelper {
-  static Database? _db;
-  static const int _version = 1;
-  static const String _tableNameUsuarios = "usuarios";
+class DbHelper {
+  static final DbHelper _instance = DbHelper._internal();
+  static Database? _database;
 
-  // Inicializa la base de datos
-  static Future<void> initDB() async {
-    if (_db != null) return;
-
-    try {
-      String path = '${await getDatabasesPath()}pumitas.db';
-      _db = await openDatabase(
-        path,
-        version: _version,
-        onCreate: (db, version) {
-          // Tabla de Usuarios
-          db.execute(
-            "CREATE TABLE $_tableNameUsuarios("
-            "id TEXT PRIMARY KEY,"
-            "uid TEXT,"
-            "name TEXT,"
-            "email TEXT,"
-            "description TEXT,"
-            "logo TEXT,"
-            "phoneNumber TEXT)",
-          );
-        },
-      );
-    } catch (e) {
-      print("Error al inicializar la base de datos: $e");
-    }
+  factory DbHelper() {
+    return _instance;
   }
 
-  // Método para insertar un usuario
-  static Future<int> insertUsuario(Usuario usuario) async {
-    try {
-      return await _db?.insert(_tableNameUsuarios, usuario.toJson()) ?? 0;
-    } catch (e) {
-      print("Error al insertar usuario: $e");
-      return 0;
-    }
+  DbHelper._internal();
+
+  // Abrir o crear la base de datos
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+
+    _database = await _initDatabase();
+    return _database!;
   }
 
-  // Método para obtener todos los usuarios
-  static Future<List<Usuario>> queryUsuarios() async {
-    try {
-      final List<Map<String, dynamic>> usuariosMapList =
-          await _db!.query(_tableNameUsuarios);
-      return usuariosMapList
-          .map((usuarioMap) => Usuario.fromJson(usuarioMap))
-          .toList();
-    } catch (e) {
-      print("Error al consultar usuarios: $e");
-      return [];
-    }
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'trade_unitec.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+    );
   }
 
-  // Método para eliminar un usuario
-  static Future<int> deleteUsuario(Usuario usuario) async {
-    try {
-      return await _db!.delete(
-        _tableNameUsuarios,
-        where: 'id = ?',
-        whereArgs: [usuario.id],
-      );
-    } catch (e) {
-      print("Error al eliminar usuario: $e");
-      return 0;
-    }
+  // Crear la tabla
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE users (
+        id TEXT PRIMARY KEY,
+        uid TEXT,
+        name TEXT,
+        email TEXT,
+        description TEXT,
+        logo TEXT,
+        phoneNumber TEXT
+      )
+    ''');
   }
 
-  // Método para actualizar un usuario
-  static Future<int> updateUsuario(
-      String id, Map<String, dynamic> updates) async {
-    try {
-      return await _db!.update(
-        _tableNameUsuarios,
-        updates,
-        where: 'id = ?',
-        whereArgs: [id],
-      );
-    } catch (e) {
-      print("Error al actualizar usuario: $e");
-      return 0;
-    }
+  // Insertar un nuevo usuario
+  Future<void> insertUser(Usuario user) async {
+    final db = await database;
+    await db.insert(
+      'users',
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Obtener todos los usuarios
+  Future<List<Usuario>> getUsers() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('users');
+
+    return List.generate(maps.length, (i) {
+      return Usuario.fromMap(maps[i]);
+    });
+  }
+
+  // Actualizar un usuario
+  Future<void> updateUser(Usuario user) async {
+    final db = await database;
+    await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
+
+  // Eliminar un usuario
+  Future<void> deleteUser(String id) async {
+    final db = await database;
+    await db.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }

@@ -17,19 +17,7 @@ class Usuario {
     required this.phoneNumber,
   });
 
-  factory Usuario.fromJson(Map<String, dynamic> json) {
-    return Usuario(
-      id: json['id'] ?? '',
-      uid: json['uid'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      description: json['description'] ?? '',
-      logo: json['logo'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'uid': uid,
@@ -39,5 +27,17 @@ class Usuario {
       'logo': logo,
       'phoneNumber': phoneNumber,
     };
+  }
+
+  factory Usuario.fromMap(Map<String, dynamic> map) {
+    return Usuario(
+      id: map['id'],
+      uid: map['uid'],
+      name: map['name'],
+      email: map['email'],
+      description: map['description'],
+      logo: map['logo'],
+      phoneNumber: map['phoneNumber'],
+    );
   }
 }

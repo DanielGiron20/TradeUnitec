@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tradeunitec/Basededatos/db_helper.dart';
 import 'package:tradeunitec/Basededatos/usuario.dart';
-import 'package:tradeunitec/Basededatos/usuario_controller.dart';
 import 'package:tradeunitec/pantallas/rutas.dart';
 import 'package:tradeunitec/widgets/custom_input.dart';
 
@@ -49,18 +49,7 @@ class Login extends StatelessWidget {
             phoneNumber: userData['numero'] ?? '',
           );
 
-          // Guardar el usuario en la base de datos local
-          final UsuarioController usuarioController =
-              Get.put(UsuarioController());
-          await usuarioController.addUsuario(
-            id: usuario.id,
-            uid: usuario.uid,
-            name: usuario.name,
-            email: usuario.email,
-            phoneNumber: usuario.phoneNumber,
-            description: usuario.description,
-            logo: usuario.logo,
-          );
+          await DbHelper().insertUser(usuario);
 
           Get.snackbar('Éxito', 'Inicio de sesión exitoso',
               backgroundColor: Colors.green, colorText: Colors.white);
