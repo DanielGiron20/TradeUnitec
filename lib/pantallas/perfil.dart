@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tradeunitec/Basededatos/db_helper.dart';
 import 'package:tradeunitec/Basededatos/usuario.dart';
 import 'package:tradeunitec/pantallas/agregar_producto.dart';
+import 'package:tradeunitec/pantallas/mis_productos.dart';
+
 
 class Perfil extends StatefulWidget {
   const Perfil({Key? key}) : super(key: key);
@@ -43,6 +45,7 @@ class _PerfilState extends State<Perfil> {
       });
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -139,25 +142,48 @@ class _PerfilState extends State<Perfil> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AgregarProducto(uid: usuario.uid),
-      ),
-    );
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.white,
-    foregroundColor: Colors.deepPurple,
-    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
-  ),
-  child: const Text('Agregar producto'),
-),
-
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AgregarProducto(uid: usuario.uid),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepPurple,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text('Agregar producto'),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MisProductos(uid: usuario.uid),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepPurple,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text('Ver mis productos'),
+                        ),
                       ],
                     ),
                   ),
