@@ -72,75 +72,127 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.blueAccent,
+        title: const Text(
+          'Iniciar Sesión',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF003366), // Azul Unitec
         centerTitle: true,
+        elevation: 0,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blueAccent.shade100, Colors.blueAccent.shade400],
+            colors: [
+              const Color(0xFF003366), // Azul Unitec
+              const Color.fromARGB(255, 23, 84, 188),
+            ],
           ),
         ),
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomInputs(
-                  controller: emailController,
-                  validator: (valor) {
-                    if (valor == null || valor.isEmpty) {
-                      return 'El correo es obligatorio';
-                    }
-                    return null;
-                  },
-                  teclado: TextInputType.emailAddress,
-                  hint: 'Ingrese su correo electrónico',
-                  nombrelabel: 'Correo electrónico',
-                  icono: Icons.email,
-                  show: false,
-                ),
-                const SizedBox(height: 15),
-                PasswordInput(
-                  controller: passwordController,
-                  validator: (valor) {
-                    if (valor == null || valor.isEmpty) {
-                      return 'La contraseña es obligatoria';
-                    }
-                    return null;
-                  },
-                  nombrelabel: 'Contraseña',
-                  hint: 'Ingrese su contraseña',
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    textStyle: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo o icono de la aplicación
+                  const Icon(
+                    Icons.person,
+                    size: 80,
+                    color: Colors.white,
                   ),
-                  child: const Text('Login',
-                      style: TextStyle(color: Colors.white)),
-                  onPressed: () => _login(context),
-                ),
-                const SizedBox(height: 20),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                    textStyle: const TextStyle(
-                        fontSize: 16, decoration: TextDecoration.underline),
+                  const SizedBox(height: 20),
+                  // Título
+                  const Text(
+                    'Bienvenido',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                  child: const Text('No tienes una cuenta? Regístrate'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, MyRoutes.Logon.name);
-                  },
-                ),
-              ],
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Inicia sesión para continuar',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  // Campo de correo electrónico
+                  CustomInputs(
+                    controller: emailController,
+                    validator: (valor) {
+                      if (valor == null || valor.isEmpty) {
+                        return 'El correo es obligatorio';
+                      }
+                      return null;
+                    },
+                    teclado: TextInputType.emailAddress,
+                    hint: 'Ingrese su correo electrónico',
+                    nombrelabel: 'Correo electrónico',
+                    icono: Icons.email,
+                    show: false,
+                  ),
+                  const SizedBox(height: 20),
+                  // Campo de contraseña
+                  PasswordInput(
+                    controller: passwordController,
+                    validator: (valor) {
+                      if (valor == null || valor.isEmpty) {
+                        return 'La contraseña es obligatoria';
+                      }
+                      return null;
+                    },
+                    nombrelabel: 'Contraseña',
+                    hint: 'Ingrese su contraseña',
+                  ),
+                  const SizedBox(height: 30),
+                  // Botón de inicio de sesión
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          const Color.fromARGB(255, 225, 38, 5), // Rojo
+                      foregroundColor: Colors.white, // Texto blanco
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 5,
+                    ),
+                    onPressed: () => _login(context),
+                    child: const Text(
+                      'Iniciar Sesión',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Enlace para registrarse
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, MyRoutes.Logon.name);
+                    },
+                    child: const Text('¿No tienes una cuenta? Regístrate'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

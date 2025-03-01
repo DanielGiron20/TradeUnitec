@@ -1,11 +1,11 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditarProductosPage extends StatefulWidget {
-  
   final String nombre;
   final String descripcion;
   final String imagenUrl;
@@ -13,7 +13,6 @@ class EditarProductosPage extends StatefulWidget {
   final String category;
 
   const EditarProductosPage({
-   
     required this.nombre,
     required this.descripcion,
     required this.imagenUrl,
@@ -84,8 +83,7 @@ class _EditarProductosPageState extends State<EditarProductosPage> {
   Future<void> _actualizarProducto() async {
     if (_nombreController.text.isEmpty || _descripcionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Por favor, complete todos los campos.")),
+        const SnackBar(content: Text("Por favor, complete todos los campos.")),
       );
       return;
     }
@@ -95,37 +93,37 @@ class _EditarProductosPageState extends State<EditarProductosPage> {
     });
 
     try {
-      String nuevaImagenUrl = widget.imagenUrl; 
+      String nuevaImagenUrl = widget.imagenUrl;
       if (_imageFile != null) {
         nuevaImagenUrl = await _subirImagen(_imageFile!);
       }
 
-      
-      QuerySnapshot productQuery = await FirebaseFirestore.instance.collection('products')
+      QuerySnapshot productQuery = await FirebaseFirestore.instance
+          .collection('products')
           .where('userid', isEqualTo: widget.userid)
           .where('name', isEqualTo: widget.nombre)
           .where('descripcion', isEqualTo: widget.descripcion)
           .where('category', isEqualTo: widget.category)
           .get();
 
-if (productQuery.docs.isNotEmpty) {
-    String documentId = productQuery.docs.first.id;
-       await FirebaseFirestore.instance
-          .collection('products')
-          .doc(documentId)
-          .update({
-        'name': _nombreController.text,
-        'descripcion': _descripcionController.text,
-        'category': _selectedCategory ?? widget.category, 
-        'imagen': nuevaImagenUrl,
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Producto actualizado exitosamente.")),
-      );
+      if (productQuery.docs.isNotEmpty) {
+        String documentId = productQuery.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('products')
+            .doc(documentId)
+            .update({
+          'name': _nombreController.text,
+          'descripcion': _descripcionController.text,
+          'category': _selectedCategory ?? widget.category,
+          'imagen': nuevaImagenUrl,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Producto actualizado exitosamente.")),
+        );
 
-      Navigator.pop(context);
-    }
-    } catch(e) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Error al actualizar producto.")),
       );
@@ -148,32 +146,27 @@ if (productQuery.docs.isNotEmpty) {
         child: Column(
           children: [
             _imageFile != null
-                ? Image.file(_imageFile!, height: 150, width: 150, fit: BoxFit.cover)
-                : Image.network(widget.imagenUrl, height: 150, width: 150, fit: BoxFit.cover),
-
+                ? Image.file(_imageFile!,
+                    height: 150, width: 150, fit: BoxFit.cover)
+                : Image.network(widget.imagenUrl,
+                    height: 150, width: 150, fit: BoxFit.cover),
             const SizedBox(height: 10),
-
             ElevatedButton(
               onPressed: _seleccionarImagen,
               child: const Text("Seleccionar Nueva Imagen"),
             ),
-
             const SizedBox(height: 20),
-
             TextField(
               controller: _nombreController,
-              decoration: const InputDecoration(labelText: 'Nombre del Producto'),
+              decoration:
+                  const InputDecoration(labelText: 'Nombre del Producto'),
             ),
-
             const SizedBox(height: 10),
-
             TextField(
               controller: _descripcionController,
               decoration: const InputDecoration(labelText: 'Descripción'),
             ),
-
             const SizedBox(height: 10),
-
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               items: _categorias.map((categoria) {
@@ -189,9 +182,7 @@ if (productQuery.docs.isNotEmpty) {
               },
               decoration: const InputDecoration(labelText: 'Categoría'),
             ),
-
             const SizedBox(height: 20),
-
             _subiendo
                 ? const CircularProgressIndicator()
                 : ElevatedButton(

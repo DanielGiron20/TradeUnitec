@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tradeunitec/pantallas/editar_producto.dart';
-import 'package:tradeunitec/pantallas/rutas.dart';
-import 'package:tradeunitec/widgets/loading_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tradeunitec/pantallas/editar_producto.dart';
 
 class PantallaProducto extends StatefulWidget {
   final String nombre;
@@ -13,14 +11,13 @@ class PantallaProducto extends StatefulWidget {
   final String userid;
   final String category;
 
-  const PantallaProducto({
-    super.key,
-    required this.nombre,
-    required this.descripcion,
-    required this.imagenUrl,
-    required this.userid,
-    required this.category
-  });
+  const PantallaProducto(
+      {super.key,
+      required this.nombre,
+      required this.descripcion,
+      required this.imagenUrl,
+      required this.userid,
+      required this.category});
 
   @override
   _PantallaProductoState createState() => _PantallaProductoState();
@@ -104,6 +101,7 @@ class _PantallaProductoState extends State<PantallaProducto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF003366),
         title: Text(widget.nombre),
         actions: [
           Row(
@@ -112,16 +110,15 @@ class _PantallaProductoState extends State<PantallaProducto> {
                 icon: const Icon(Icons.edit),
                 tooltip: 'Edit Profile',
                 onPressed: () {
-
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditarProductosPage(
-                  nombre: widget.nombre,
-                  descripcion: widget.descripcion,
-                  category: widget.category,
-                  imagenUrl: widget.imagenUrl,
-                  userid: widget.userid,
-                ),
-              ));
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditarProductosPage(
+                      nombre: widget.nombre,
+                      descripcion: widget.descripcion,
+                      category: widget.category,
+                      imagenUrl: widget.imagenUrl,
+                      userid: widget.userid,
+                    ),
+                  ));
                 },
               ),
               IconButton(

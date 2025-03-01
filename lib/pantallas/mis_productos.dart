@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeunitec/pantallas/mi_producto.dart';
-import 'package:tradeunitec/pantallas/rutas.dart';
 import 'package:tradeunitec/widgets/product_card.dart';
 
 class MisProductos extends StatelessWidget {
@@ -13,8 +12,14 @@ class MisProductos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mis Productos'),
-        backgroundColor: Colors.blue,
+        title: const Text(
+          'Mis Productos',
+          style: TextStyle(
+            color: Colors.white, // Texto blanco para contraste
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF003366), // Azul Unitec
       ),
       body: Column(
         children: [
@@ -31,12 +36,24 @@ class MisProductos extends StatelessWidget {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFF003366)), // Azul Unitec
+                    ),
+                  );
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
-                      child: Text("No hay productos disponibles"));
+                    child: Text(
+                      "No hay productos disponibles",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color(0xFF003366), // Azul Unitec
+                      ),
+                    ),
+                  );
                 }
 
                 var productos = snapshot.data!.docs;
@@ -59,18 +76,18 @@ class MisProductos extends StatelessWidget {
                       userId: producto['userid'],
                       category: producto['category'],
                       ontap: () {
-                       Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PantallaProducto(
-                      nombre: producto['name'],
-                      descripcion: producto['descripcion'],
-                      imagenUrl: producto['imagen'],
-                      userid: producto['userid'],
-                      category: producto['category'],
-                    ),
-                  ),
-                );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PantallaProducto(
+                              nombre: producto['name'],
+                              descripcion: producto['descripcion'],
+                              imagenUrl: producto['imagen'],
+                              userid: producto['userid'],
+                              category: producto['category'],
+                            ),
+                          ),
+                        );
                       },
                     );
                   },

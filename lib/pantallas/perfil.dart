@@ -4,7 +4,6 @@ import 'package:tradeunitec/Basededatos/usuario.dart';
 import 'package:tradeunitec/pantallas/agregar_producto.dart';
 import 'package:tradeunitec/pantallas/mis_productos.dart';
 
-
 class Perfil extends StatefulWidget {
   const Perfil({Key? key}) : super(key: key);
 
@@ -45,7 +44,6 @@ class _PerfilState extends State<Perfil> {
       });
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -53,21 +51,31 @@ class _PerfilState extends State<Perfil> {
       title: 'Perfil',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Perfil de Usuario'),
-          backgroundColor: const Color.fromARGB(255, 0, 94, 255),
-          foregroundColor: Colors.black,
+          title: const Text(
+            'Perfil de Usuario',
+            style: TextStyle(
+              color: Colors.white, // Texto blanco para contraste
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: const Color(0xFF003366),
           elevation: 0,
         ),
         body: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Color(0xFF003366)), // Azul Unitec
+                ),
+              )
             : Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      const Color.fromARGB(255, 0, 94, 255),
-                      const Color.fromARGB(255, 14, 54, 125)
+                      const Color(0xFF003366),
+                      const Color.fromARGB(255, 23, 84, 188),
                     ],
                   ),
                 ),
@@ -79,10 +87,10 @@ class _PerfilState extends State<Perfil> {
                         CircleAvatar(
                           radius: 60,
                           backgroundImage: NetworkImage(usuario.logo),
-                          backgroundColor:
-                              const Color.fromRGBO(255, 255, 255, 1),
+                          backgroundColor: Colors.white,
                         ),
                         const SizedBox(height: 20),
+                        // Nombre del usuario
                         Text(
                           usuario.name,
                           style: const TextStyle(
@@ -92,6 +100,7 @@ class _PerfilState extends State<Perfil> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        // Correo electrónico
                         Text(
                           usuario.email,
                           style: const TextStyle(
@@ -111,12 +120,21 @@ class _PerfilState extends State<Perfil> {
                             child: Column(
                               children: [
                                 ListTile(
-                                  leading: const Icon(Icons.phone,
-                                      color: Colors.deepPurple),
-                                  title: const Text('Teléfono'),
+                                  leading: const Icon(
+                                    Icons.phone,
+                                    color:
+                                        const Color.fromARGB(255, 225, 38, 5),
+                                  ),
+                                  title: const Text(
+                                    'Teléfono',
+                                    style: TextStyle(color: Color(0xFF003366)),
+                                  ),
                                   subtitle: Text(
                                     usuario.phoneNumber,
-                                    style: const TextStyle(fontSize: 16),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
                                   ),
                                 ),
                                 const Divider(),
@@ -125,13 +143,13 @@ class _PerfilState extends State<Perfil> {
                           ),
                         ),
                         const SizedBox(height: 20),
+                        // Botón para editar perfil
                         ElevatedButton(
-                          onPressed: () {
-                            // Acción para editar perfil
-                          },
+                          onPressed: () {},
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.deepPurple,
+                            backgroundColor:
+                                const Color.fromARGB(255, 225, 38, 5),
+                            foregroundColor: const Color(0xFF003366),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 12),
                             shape: RoundedRectangleBorder(
@@ -141,6 +159,7 @@ class _PerfilState extends State<Perfil> {
                           child: const Text('Editar Perfil'),
                         ),
                         const SizedBox(height: 20),
+                        // Botón para agregar producto
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -152,8 +171,9 @@ class _PerfilState extends State<Perfil> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.deepPurple,
+                            backgroundColor:
+                                const Color.fromARGB(255, 225, 38, 5),
+                            foregroundColor: const Color(0xFF003366),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 12),
                             shape: RoundedRectangleBorder(
@@ -163,6 +183,7 @@ class _PerfilState extends State<Perfil> {
                           child: const Text('Agregar producto'),
                         ),
                         const SizedBox(height: 20),
+                        // Botón para ver mis productos
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -174,8 +195,9 @@ class _PerfilState extends State<Perfil> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.deepPurple,
+                            backgroundColor:
+                                const Color.fromARGB(255, 225, 38, 5),
+                            foregroundColor: const Color(0xFF003366),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 12),
                             shape: RoundedRectangleBorder(

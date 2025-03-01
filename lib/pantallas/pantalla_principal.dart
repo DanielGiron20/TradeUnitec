@@ -46,123 +46,137 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Trade Unitec'),
-          actions: [
-            isLogged
-                ? GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, MyRoutes.Perfil.name,
-                          arguments: currentUser);
-                    },
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(currentUser.logo),
-                    ),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.person),
-                    tooltip: 'Iniciar sesión',
-                    onPressed: () {
-                      Navigator.pushNamed(context, MyRoutes.Login.name)
-                          .then((value) {
-                        if (value is Usuario) {
-                          setState(() {
-                            currentUser = value;
-                            isLogged = true;
-                          });
-                        }
-                      });
-                    },
+  return MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Trade Unitec',
+          style: TextStyle(
+            color: Colors.white, // Texto blanco para contrastar con el azul
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF003366), // Azul Unitec
+        actions: [
+          isLogged
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, MyRoutes.Perfil.name,
+                        arguments: currentUser);
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(currentUser.logo),
                   ),
-          ],
-        ),
-        body: Column(
-          children: [
-            const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: ["Todos", "Electrónica", "Moda", "Hogar", "Deportes"]
-                    .map((categoria) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ChoiceChip(
-                            label: Text(categoria),
-                            selected: categoriaSeleccionada == categoria,
-                            onSelected: (selected) {
-                              setState(() {
-                                categoriaSeleccionada = categoria;
-                              });
-                            },
-                          ),
-                        ))
-                    .toList(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: categoriaSeleccionada == "Todos"
-                    ? FirebaseFirestore.instance
-                        .collection('products')
-                        .snapshots()
-                    : FirebaseFirestore.instance
-                        .collection('products')
-                        .where('category', isEqualTo: categoriaSeleccionada)
-                        .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(
-                        child: Text("No hay productos disponibles"));
-                  }
-
-                  var productos = snapshot.data!.docs;
-
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(10),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 0.8,
-                    ),
-                    itemCount: productos.length,
-                    itemBuilder: (context, index) {
-                      var producto = productos[index];
-                      return ProductCard(
-                        nombre: producto['name'],
-                        descripcion: producto['descripcion'],
-                        imagenUrl: producto['imagen'],
-                        userId: producto['userid'],
-                        category: producto['category'],
-                        ontap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PantallaProducto(
-                                nombre: producto['name'],
-                                descripcion: producto['descripcion'],
-                                imagenUrl: producto['imagen'],
-                                userid: producto['userid'],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.person, color: Colors.white), // Icono blanco
+                  tooltip: 'Iniciar sesión',
+                  onPressed: () {
+                    Navigator.pushNamed(context, MyRoutes.Login.name).then((value) {
+                      if (value is Usuario) {
+                        setState(() {
+                          currentUser = value;
+                          isLogged = true;
+                        });
+                      }
+                    });
+                  },
+                ),
+        ],
       ),
-    );
-  }
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: ["Todos", "Electrónica", "Moda", "Hogar", "Deportes"]
+                  .map((categoria) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ChoiceChip(
+                          label: Text(
+                            categoria,
+                            style: TextStyle(
+                              color: categoriaSeleccionada == categoria
+                                  ? Colors.white // Texto blanco cuando está seleccionado
+                                  : const Color(0xFF003366), // Azul Unitec
+                            ),
+                          ),
+                          selected: categoriaSeleccionada == categoria,
+                          selectedColor: const Color(0xFFFFCC00), // Amarillo Unitec
+                          backgroundColor: Colors.grey[200], // Fondo gris claro
+                          onSelected: (selected) {
+                            setState(() {
+                              categoriaSeleccionada = categoria;
+                            });
+                          },
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: categoriaSeleccionada == "Todos"
+                  ? FirebaseFirestore.instance
+                      .collection('products')
+                      .snapshots()
+                  : FirebaseFirestore.instance
+                      .collection('products')
+                      .where('category', isEqualTo: categoriaSeleccionada)
+                      .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                      child: Text("No hay productos disponibles"));
+                }
+
+                var productos = snapshot.data!.docs;
+
+                return GridView.builder(
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: productos.length,
+                  itemBuilder: (context, index) {
+                    var producto = productos[index];
+                    return ProductCard(
+                      nombre: producto['name'],
+                      descripcion: producto['descripcion'],
+                      imagenUrl: producto['imagen'],
+                      userId: producto['userid'],
+                      category: producto['category'],
+                      ontap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PantallaProducto(
+                              nombre: producto['name'],
+                              descripcion: producto['descripcion'],
+                              imagenUrl: producto['imagen'],
+                              userid: producto['userid'],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }

@@ -90,32 +90,70 @@ class _AgregarProductoState extends State<AgregarProducto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Agregar Producto'),
-        backgroundColor: Colors.blue,
+        title: const Text(
+          'Agregar Producto',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF003366), // Azul Unitec
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Sección de la imagen
             _imagen != null
-                ? Image.file(_imagen!,
-                    height: 150, width: 150, fit: BoxFit.cover)
-                : const Icon(Icons.image, size: 150, color: Colors.grey),
+                ? Image.file(
+                    _imagen!,
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.cover,
+                  )
+                : const Icon(
+                    Icons.image,
+                    size: 150,
+                    color: Colors.grey,
+                  ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _seleccionarImagen,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFFCC00),
+                foregroundColor: const Color(0xFF003366),
+              ),
               child: const Text("Seleccionar Imagen"),
             ),
             const SizedBox(height: 20),
+
+            // Campo de texto para el nombre del producto
             TextField(
               controller: _nombreController,
-              decoration:
-                  const InputDecoration(labelText: 'Nombre del Producto'),
+              decoration: InputDecoration(
+                labelText: 'Nombre del Producto',
+                labelStyle: const TextStyle(color: Color(0xFF003366)),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF003366)),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF003366)),
+                ),
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _descripcionController,
-              decoration: const InputDecoration(labelText: 'Descripción'),
+              decoration: InputDecoration(
+                labelText: 'Descripción',
+                labelStyle: const TextStyle(color: Color(0xFF003366)),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF003366)),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF003366)),
+                ),
+              ),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
@@ -123,7 +161,10 @@ class _AgregarProductoState extends State<AgregarProducto> {
               items: _categorias.map((categoria) {
                 return DropdownMenuItem<String>(
                   value: categoria,
-                  child: Text(categoria),
+                  child: Text(
+                    categoria,
+                    style: const TextStyle(color: Color(0xFF003366)),
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
@@ -131,13 +172,30 @@ class _AgregarProductoState extends State<AgregarProducto> {
                   _categoria = value!;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Categoría'),
+              decoration: InputDecoration(
+                labelText: 'Categoría',
+                labelStyle: const TextStyle(color: Color(0xFF003366)),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF003366)),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF003366)),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             _subiendo
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF003366)),
+                  )
                 : ElevatedButton(
                     onPressed: _guardarProducto,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          const Color(0xFFFFCC00),
+                      foregroundColor: const Color(0xFF003366),
+                    ),
                     child: const Text("Guardar Producto"),
                   ),
           ],

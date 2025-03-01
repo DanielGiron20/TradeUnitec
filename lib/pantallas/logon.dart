@@ -28,43 +28,73 @@ class _LogonState extends State<Logon> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Registro de Vendedor")),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildTextInput(
-                controller: _nombreController,
-                label: "Nombre de vendedor",
-                hint: "Ingrese el nombre de vendedor",
-                icon: Icons.person,
-                validator: _validateNombre,
-              ),
-              _buildTextInput(
-                controller: _correoController,
-                label: "Correo electrónico",
-                hint: "Ingrese su correo institucional",
-                icon: Icons.email,
-                keyboardType: TextInputType.emailAddress,
-                validator: _validateCorreo,
-              ),
-              _buildTextInput(
-                controller: _numeroController,
-                label: "Número",
-                hint: "Ingrese su número de teléfono",
-                icon: Icons.phone,
-                keyboardType: TextInputType.number,
-                validator: _validateNumero,
-              ),
-              _buildPasswordInput(),
-              const SizedBox(height: 20),
-              _buildImagePicker(),
-              const SizedBox(height: 20),
-              _buildRegisterButton(context),
+      appBar: AppBar(
+        title: const Text(
+          "Registro de Vendedor",
+          style: TextStyle(
+            color: Colors.white, // Texto blanco para contraste
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF003366),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF003366),
+              Color.fromARGB(255, 23, 84, 188),
             ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Campo de nombre de vendedor
+                _buildTextInput(
+                  controller: _nombreController,
+                  label: "Nombre de vendedor",
+                  hint: "Ingrese el nombre de vendedor",
+                  icon: Icons.person,
+                  validator: _validateNombre,
+                ),
+                const SizedBox(height: 20),
+                // Campo de correo electrónico
+                _buildTextInput(
+                  controller: _correoController,
+                  label: "Correo electrónico",
+                  hint: "Ingrese su correo institucional",
+                  icon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: _validateCorreo,
+                ),
+                const SizedBox(height: 20),
+                // Campo de número de teléfono
+                _buildTextInput(
+                  controller: _numeroController,
+                  label: "Número de teléfono",
+                  hint: "Ingrese su número de teléfono",
+                  icon: Icons.phone,
+                  keyboardType: TextInputType.phone,
+                  validator: _validateNumero,
+                ),
+                const SizedBox(height: 20),
+                _buildPasswordInput(),
+                const SizedBox(height: 20),
+                _buildImagePicker(),
+                const SizedBox(height: 20),
+                _buildRegisterButton(context),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
