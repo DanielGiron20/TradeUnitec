@@ -13,7 +13,7 @@ class ProductCard extends StatelessWidget {
     required this.descripcion,
     required this.imagenUrl,
     required this.userId,
-    required this.ontap,
+    required this.ontap, required category,
   });
 
   @override

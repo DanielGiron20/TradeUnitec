@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class PantallaProducto extends StatefulWidget {
   final String nombre;
@@ -22,6 +25,7 @@ class PantallaProducto extends StatefulWidget {
 class _PantallaProductoState extends State<PantallaProducto> {
   String nombreVendedor = "Cargando...";
   String? _userPhotoUrl;
+  String? _usernumber;
 
   @override
   void initState() {
@@ -40,6 +44,7 @@ class _PantallaProductoState extends State<PantallaProducto> {
         setState(() {
           nombreVendedor = usuario.docs.first['name'];
           _userPhotoUrl = usuario.docs.first['logo'];
+          _usernumber = usuario.docs.first['numero'];
         });
       } else {
         setState(() {
@@ -51,6 +56,11 @@ class _PantallaProductoState extends State<PantallaProducto> {
         nombreVendedor = "Error al obtener vendedor";
       });
     }
+  }
+
+   Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   @override
@@ -82,7 +92,7 @@ class _PantallaProductoState extends State<PantallaProducto> {
             ),
           ),
           const SizedBox(height: 20),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: _userPhotoUrl != null
                 ? CircleAvatar(backgroundImage: NetworkImage(_userPhotoUrl!))
@@ -91,23 +101,20 @@ class _PantallaProductoState extends State<PantallaProducto> {
             subtitle: Text("Usuario: $nombreVendedor"),
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: ElevatedButton.icon(
+         Row(
+           mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+           IconButton(
+            icon: const FaIcon(FontAwesomeIcons.whatsapp),
+            color: Colors.green,
+             iconSize: 60,
               onPressed: () {
-                
-
-                // pantalla para chatear
-
-              },
-              icon: const Icon(Icons.message),
-              label: const Text("Contactar"),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-          ),
+                final whatsappUrl =
+                 'https://wa.me/+504$_usernumber?text=${Uri.encodeComponent('Vi tu producto ${widget.nombre} en TradeUnitec y me interesó')}';
+                  _launchUrl(whatsappUrl);
+          },
+           )
+         ])
         ],
       ),
     );

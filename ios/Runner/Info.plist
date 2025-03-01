@@ -13,6 +13,11 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
+	<key>LSAplicationQueriesSchemes</key>
+	<array>
+	<string>tel</string>
+	<string>whatsapp</string>
+	</array>
 	<string>tradeunitec</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>

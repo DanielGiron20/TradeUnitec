@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import "package:tradeunitec/pantallas/agregar_producto.dart";
+import 'package:tradeunitec/pantallas/editar_producto.dart';
 import 'package:tradeunitec/pantallas/login.dart';
 import 'package:tradeunitec/pantallas/logon.dart';
+import 'package:tradeunitec/pantallas/mi_producto.dart';
 import 'package:tradeunitec/pantallas/mis_productos.dart';
 import 'package:tradeunitec/pantallas/pantalla_principal.dart';
 import 'package:tradeunitec/pantallas/perfil.dart';
@@ -14,7 +16,10 @@ enum MyRoutes {
   Logon,
   Perfil,
   AgregarProducto,
-  MisProductos
+  MisProductos,
+  EditarProductosPage,
+  PantallaProducto,
+
 }
 
 final Map<String, Widget Function(BuildContext)> routes = {
@@ -27,5 +32,19 @@ final Map<String, Widget Function(BuildContext)> routes = {
       ),
   MyRoutes.MisProductos.name: (context) => const MisProductos(
         uid: '',
+      ),
+ MyRoutes.EditarProductosPage.name: (context) => const EditarProductosPage(
+       userid: '',
+       nombre: '',
+       descripcion: '',
+       category: '',
+       imagenUrl: '',
+      ),
+  MyRoutes.PantallaProducto.name: (context) => const PantallaProducto(
+        userid: '',
+        nombre: '',
+        descripcion: '',
+        category: '',
+        imagenUrl: '',
       ),
 };

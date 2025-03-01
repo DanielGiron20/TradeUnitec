@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeunitec/pantallas/mi_producto.dart';
+import 'package:tradeunitec/pantallas/rutas.dart';
 import 'package:tradeunitec/widgets/product_card.dart';
 
 class MisProductos extends StatelessWidget {
@@ -55,7 +57,21 @@ class MisProductos extends StatelessWidget {
                       descripcion: producto['descripcion'],
                       imagenUrl: producto['imagen'],
                       userId: producto['userid'],
-                      ontap: () {},
+                      category: producto['category'],
+                      ontap: () {
+                       Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PantallaProducto(
+                      nombre: producto['name'],
+                      descripcion: producto['descripcion'],
+                      imagenUrl: producto['imagen'],
+                      userid: producto['userid'],
+                      category: producto['category'],
+                    ),
+                  ),
+                );
+                      },
                     );
                   },
                 );

@@ -140,6 +140,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                         descripcion: producto['descripcion'],
                         imagenUrl: producto['imagen'],
                         userId: producto['userid'],
+                        category: producto['category'],
                         ontap: () {
                           Navigator.push(
                             context,
