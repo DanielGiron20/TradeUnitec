@@ -3,6 +3,7 @@ import 'package:tradeunitec/Basededatos/db_helper.dart';
 import 'package:tradeunitec/Basededatos/usuario.dart';
 import 'package:tradeunitec/pantallas/agregar_producto.dart';
 import 'package:tradeunitec/pantallas/mis_productos.dart';
+import 'package:tradeunitec/pantallas/editar_perfil.dart';
 
 class Perfil extends StatefulWidget {
   const Perfil({Key? key}) : super(key: key);
@@ -122,8 +123,7 @@ class _PerfilState extends State<Perfil> {
                                 ListTile(
                                   leading: const Icon(
                                     Icons.phone,
-                                    color:
-                                        const Color.fromARGB(255, 225, 38, 5),
+                                    color: Color.fromARGB(255, 225, 38, 5),
                                   ),
                                   title: const Text(
                                     'Teléfono',
@@ -145,7 +145,14 @@ class _PerfilState extends State<Perfil> {
                         const SizedBox(height: 20),
                         // Botón para editar perfil
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditarPerfil(usuario: usuario),
+                              ),
+                            ).then((_) => getUser()); // Recargar usuario después de editar
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromARGB(255, 225, 38, 5),
