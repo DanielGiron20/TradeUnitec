@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tradeunitec/widgets/custom_input.dart';
 import 'package:tradeunitec/widgets/loading_dialog.dart';
@@ -22,7 +23,11 @@ class _LogonState extends State<Logon> {
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
   final TextEditingController _numeroController = TextEditingController();
+  final TextEditingController _identidadController = TextEditingController();
   File? _logoFile;
+  File? _cedulaFile;
+  Map<String, String> _extractedData = {};
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   final loadingDialog = LoadingDialog();
 
   @override
@@ -69,6 +74,16 @@ class _LogonState extends State<Logon> {
                 const SizedBox(height: 20),
                 // Campo de correo electrónico
                 _buildTextInput(
+                  controller: _identidadController,
+                  label: "Numero de identidad ",
+                  hint: "Ingrese su numero de identidad",
+                  icon: Icons.person,
+                  keyboardType: TextInputType.number,
+                  validator: _validateCedula,
+                ),
+                const SizedBox(height: 20),
+                // Campo de correo electrónico
+                _buildTextInput(
                   controller: _correoController,
                   label: "Correo electrónico",
                   hint: "Ingrese su correo institucional",
@@ -99,6 +114,154 @@ class _LogonState extends State<Logon> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pickCedula(context);
+  }
+
+  Future<void> _pickCedula(BuildContext context) async {
+    Future.delayed(Duration.zero, () async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Seleccionar método'),
+            content: Text(
+                '¿Desea llenar los datos usando la cédula o hacerlo manualmente?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _seleccionarCedula(); // Aquí agregas tu lógica
+
+                  print("Llenar con cédula");
+                },
+                child: Text('Usar cédula'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  print("Llenar manualmente");
+                },
+                child: Text('Manual'),
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+
+  Future<void> _seleccionarCedula() async {
+    try {
+      final ImagePicker _picker = ImagePicker();
+
+      final pickedFile = await showDialog<XFile>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Selecciona una fuente de imagen'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context,
+                    await _picker.pickImage(source: ImageSource.camera));
+              },
+              child: const Text('Cámara'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context,
+                    await _picker.pickImage(source: ImageSource.gallery));
+              },
+              child: const Text('Galería'),
+            ),
+          ],
+        ),
+      );
+      if (pickedFile != null) {
+        setState(() {
+          _cedulaFile = File(pickedFile.path);
+        });
+
+        final inputImage = InputImage.fromFile(_cedulaFile!);
+        final recognizedText = await textRecognizer.processImage(inputImage);
+
+        final List<String> lines = recognizedText.text.split('\n');
+        print("Texto detectado: $lines");
+
+        final extractedData = _extractCedulaInfo(lines);
+        print("Información extraída: $extractedData");
+
+        setState(() {
+          _extractedData = extractedData;
+        });
+
+        Get.snackbar(
+          'Información Extraída',
+          extractedData.toString(),
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 5),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'No se pudo seleccionar la imagen.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Map<String, String> _extractCedulaInfo(List<String> lines) {
+    Map<String, String> data = {
+      "Nombre": "No detectado",
+      "Apellido": "No detectado",
+      "Fecha de Nacimiento": "",
+      "Número de Identidad": "",
+      "Nacionalidad": "",
+      "Lugar de Nacimiento": "",
+      "Fecha de Emisión": "",
+    };
+
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i].trim();
+      if (line.contains(
+              RegExp(r'nombre\s*\/?\s*forename', caseSensitive: false)) &&
+          i + 1 < lines.length) {
+        data["Nombre"] = lines[i + 1].trim();
+      } else if (line.contains(RegExp('apellido', caseSensitive: false)) &&
+          i + 1 < lines.length) {
+        data["Apellido"] = lines[i + 1].trim();
+      } else if (line
+          .contains(RegExp('fecha de nacimiento', caseSensitive: false))) {
+        if (data["Fecha de Nacimiento"]!.isEmpty) {
+          data["Fecha de Nacimiento"] = lines[i + 1].trim();
+        } else {
+          data["Fecha de Emisión"] = line.trim();
+        }
+      } else if (line.contains(RegExp(r'\d{4}\s\d{4}\s\d{5}'))) {
+        data["Número de Identidad"] = line.trim();
+      } else if (line.contains("HND")) {
+        data["Nacionalidad"] = "Honduras";
+      } else if (line.contains(RegExp(r'lugar de nacimiento|place of birth',
+              caseSensitive: false)) &&
+          i + 1 < lines.length) {
+        data["Lugar de Nacimiento"] = lines[i + 1].trim();
+      } else if (line.contains(RegExp(r'fecha de expiración|date of expiry',
+              caseSensitive: false)) &&
+          i + 1 < lines.length) {
+        data["Fecha de Emisión"] = lines[i + 1].trim();
+      }
+    }
+    _nombreController.text = data["Nombre"]!;
+    _identidadController.text = data["Número de Identidad"]!;
+
+    return data;
   }
 
   Widget _buildTextInput({
@@ -241,6 +404,13 @@ class _LogonState extends State<Logon> {
 
   String? _validateCorreo(String? value) {
     if (value == null || value.isEmpty) return 'El correo es obligatorio';
+    return null;
+  }
+
+  String? _validateCedula(String? value) {
+    if (value == null || value.isEmpty)
+      return 'El numero de identidad es obligaroio';
+    if (value.length != 13) return 'Debe tener 13 dígitos';
     return null;
   }
 
