@@ -122,6 +122,89 @@ class _LogonState extends State<Logon> {
     _pickCedula(context);
   }
 
+void _showTerms(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              titlePadding: const EdgeInsets.all(0),
+              title: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: const BoxDecoration(
+                  color:  const Color(0xFF003366),
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(15.0)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.info, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      'Términos y Condiciones',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
+              content: const SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Términos y Condiciones de uso para traders\n\n'
+                      '1. Aceptación de los Términos: Al descargar, registrarse o utilizar la aplicación "Trade Unitec", desarrollada con el fin de facilitar el contacto entre estudiantes que buscan comprar y vender, usted acepta y se compromete a cumplir estos términos y condiciones. Si no está de acuerdo con alguno de los términos, debe abstenerse de utilizar la aplicación.\n\n'
+                      '2. Al registrarse, usted acepta que sus datos proporcionados, incluyendo su contacto de teléfono, serán visibles públicamente para todos los usuarios de la aplicación.\n\n'
+                      'Esta información es necesaria para facilitar la comunicación entre vendedores y compradores. No nos hacemos responsables del uso que otros usuarios puedan hacer de esta información fuera de la plataforma.\n\n'
+                      '3. Contenido Subido por el Usuario: Al subir contenido, como imágenes o descripciones de productos, usted declara ser el propietario legítimo de dicho contenido y que no infringe los derechos de terceros. Nos reservamos el derecho de eliminar cualquier contenido que consideremos inapropiado o que infrinja estos términos.\n\n'
+                      '4. Responsabilidad del Usuario: Usted es el único responsable de la información que comparte en la aplicación y de las interacciones que tenga con otros usuarios. No somos responsables de las negociaciones, transacciones o conflictos que puedan surgir entre usuarios.\n\n'
+                      '5. Terminación del Servicio: Nos reservamos el derecho de suspender o eliminar su cuenta si se detecta un uso indebido de la plataforma o si incumple estos términos.\n\n'
+                      '6. Spam: La subida de un mismo producto repetidas veces sera visto como spam y sera eliminado.\n\n'
+                      '7. Aplicacion independiente de la universidad: La plataforma no es una aplicacion oficial de la universidad y es desarrollada por estudiantes de la universidad para facilitar el contacto entre estudiantes de la Universidad UNITEC.\n\n',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.grey[600],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text('No acepto'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:  const Color(0xFF003366),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text('Si acepto'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _registerSeller(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
   Future<void> _pickCedula(BuildContext context) async {
     Future.delayed(Duration.zero, () async {
       await showDialog(
@@ -316,7 +399,7 @@ class _LogonState extends State<Logon> {
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
         textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
-      onPressed: () => _registerSeller(context),
+      onPressed: () => _showTerms(context),
       child: const Text('Registrarse', style: TextStyle(color: Colors.white)),
     );
   }
