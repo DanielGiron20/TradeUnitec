@@ -39,7 +39,8 @@ class DbHelper {
         email TEXT,
         description TEXT,
         logo TEXT,
-        phoneNumber TEXT
+        phoneNumber TEXT,
+        cedula TEXT
       )
     ''');
   }

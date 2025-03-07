@@ -47,6 +47,7 @@ class Login extends StatelessWidget {
             description: userData['description'] ?? '',
             logo: userData['logo'] ?? '',
             phoneNumber: userData['numero'] ?? '',
+            cedula: userData['cedula'] ?? '',
           );
 
           await DbHelper().insertUser(usuario);
@@ -61,7 +62,7 @@ class Login extends StatelessWidget {
         Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {
-      // Manejo de errores...
+      Get.snackbar('Error', 'Error de inicio de sesión: ${e.message}');
     } catch (e) {
       Get.snackbar('Error', 'Error inesperado: $e',
           backgroundColor: Colors.red, colorText: Colors.white);

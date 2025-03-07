@@ -6,6 +6,7 @@ class Usuario {
   String description;
   String logo;
   String phoneNumber;
+  String cedula;
 
   Usuario({
     required this.id,
@@ -15,6 +16,7 @@ class Usuario {
     required this.description,
     required this.logo,
     required this.phoneNumber,
+    required this.cedula,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class Usuario {
       'description': description,
       'logo': logo,
       'phoneNumber': phoneNumber,
+      'cedula': cedula
     };
   }
 
@@ -38,6 +41,7 @@ class Usuario {
       description: map['description'],
       logo: map['logo'],
       phoneNumber: map['phoneNumber'],
+      cedula: map['cedula'],
     );
   }
 }
