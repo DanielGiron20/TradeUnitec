@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tradeunitec/Basededatos/db_helper.dart';
 import 'package:tradeunitec/Basededatos/usuario.dart';
-import 'dart:io';
 
 class EditarPerfil extends StatefulWidget {
   final Usuario usuario;
@@ -19,37 +20,34 @@ class EditarPerfil extends StatefulWidget {
 class _EditarPerfilState extends State<EditarPerfil> {
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
-  File? _imageFile; 
+  File? _imageFile;
 
   @override
   void initState() {
     super.initState();
- 
+
     _nameController = TextEditingController(text: widget.usuario.name);
     _phoneController = TextEditingController(text: widget.usuario.phoneNumber);
   }
 
   @override
   void dispose() {
-  
     _nameController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
 
- 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path); 
+        _imageFile = File(pickedFile.path);
       });
     }
   }
 
-  
   Future<String?> _uploadImage() async {
     if (_imageFile == null) return null;
 
@@ -58,8 +56,8 @@ class _EditarPerfilState extends State<EditarPerfil> {
           .ref()
           .child('user_images/${widget.usuario.uid}.jpg');
 
-      await storageRef.putFile(_imageFile!); 
-      final imageUrl = await storageRef.getDownloadURL(); 
+      await storageRef.putFile(_imageFile!);
+      final imageUrl = await storageRef.getDownloadURL();
       return imageUrl;
     } catch (e) {
       print("Error al subir la imagen: $e");
@@ -71,12 +69,10 @@ class _EditarPerfilState extends State<EditarPerfil> {
     try {
       String? newLogoUrl = widget.usuario.logo;
 
-     
       if (_imageFile != null) {
         newLogoUrl = await _uploadImage();
       }
 
-      
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         await FirebaseFirestore.instance
@@ -89,28 +85,23 @@ class _EditarPerfilState extends State<EditarPerfil> {
         });
       }
 
-      
       await DbHelper().updateUser(
         Usuario(
-          id: widget.usuario.id,
-          uid: widget.usuario.uid,
-          name: _nameController.text,
-          email: widget.usuario.email,
-          description: widget.usuario.description,
-          logo: newLogoUrl ?? widget.usuario.logo,
-          phoneNumber: _phoneController.text,
-        ),
+            id: widget.usuario.id,
+            uid: widget.usuario.uid,
+            name: _nameController.text,
+            email: widget.usuario.email,
+            description: widget.usuario.description,
+            logo: newLogoUrl ?? widget.usuario.logo,
+            phoneNumber: _phoneController.text,
+            cedula: widget.usuario.cedula),
       );
 
-      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Perfil actualizado correctamente')),
       );
-
-     
       Navigator.pop(context);
     } catch (e) {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al actualizar el perfil: $e')),
       );
@@ -129,16 +120,15 @@ class _EditarPerfilState extends State<EditarPerfil> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            
             GestureDetector(
-              onTap: _pickImage, 
+              onTap: _pickImage,
               child: CircleAvatar(
                 radius: 60,
                 backgroundImage: _imageFile != null
-                    ? FileImage(_imageFile!) 
+                    ? FileImage(_imageFile!)
                     : NetworkImage(widget.usuario.logo) as ImageProvider,
                 child: _imageFile == null
-                    ? const Icon(Icons.camera_alt, size: 40) 
+                    ? const Icon(Icons.camera_alt, size: 40)
                     : null,
               ),
             ),
@@ -163,7 +153,8 @@ class _EditarPerfilState extends State<EditarPerfil> {
               onPressed: _actualizarPerfil,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 225, 38, 5),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
