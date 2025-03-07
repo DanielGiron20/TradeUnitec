@@ -26,7 +26,6 @@ class _LogonState extends State<Logon> {
   final TextEditingController _identidadController = TextEditingController();
   File? _logoFile;
   File? _cedulaFile;
-  Map<String, String> _extractedData = {};
   final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   final loadingDialog = LoadingDialog();
 
@@ -277,11 +276,6 @@ void _showTerms(BuildContext context) {
 
         final extractedData = _extractCedulaInfo(lines);
         print("Información extraída: $extractedData");
-
-        setState(() {
-          _extractedData = extractedData;
-        });
-
         Get.snackbar(
           'Información Extraída',
           extractedData.toString(),
@@ -465,7 +459,8 @@ void _showTerms(BuildContext context) {
         'name': _nombreController.text.trim(),
         'correo': _correoController.text.trim(),
         'numero': _numeroController.text.trim(),
-        'logo': logoUrl
+        'logo': logoUrl,
+        'cedula': _identidadController.text.trim(),
       });
 
       Get.snackbar(
