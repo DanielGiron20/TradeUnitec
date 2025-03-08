@@ -436,13 +436,28 @@ void _showTerms(BuildContext context) {
     loadingDialog.show(context);
 
     try {
+      String correo = _correoController.text.toLowerCase().trim();
+      String contrasena = _contrasenaController.text.trim();
+      String nombre = _nombreController.text.trim();
+      String numero = _numeroController.text.trim();
+      String cedula = _identidadController.text.trim();
+
+      // Asegurar que los campos obligatorios no sean nulos ni vacíos
+      if (correo.isEmpty || contrasena.isEmpty || nombre.isEmpty || numero.isEmpty) {
+        Get.snackbar('Error', 'Todos los campos obligatorios deben estar llenos.');
+        loadingDialog.hide(context);
+        return;
+      }
+
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _correoController.text.toLowerCase().trim(),
-        password: _contrasenaController.text.trim(),
+        email: correo,
+        password: contrasena,
       );
+
       await userCredential.user!.sendEmailVerification();
 
+      // Manejo seguro del logo
       String logoUrl = '';
       if (_logoFile != null) {
         final storageRef = FirebaseStorage.instance.refFromURL(
@@ -456,11 +471,11 @@ void _showTerms(BuildContext context) {
           .doc(userCredential.user!.uid)
           .set({
         'uid': userCredential.user!.uid,
-        'name': _nombreController.text.trim(),
-        'correo': _correoController.text.trim(),
-        'numero': _numeroController.text.trim(),
+        'name': nombre,
+        'correo': correo,
+        'numero': numero,
         'logo': logoUrl,
-        'cedula': _identidadController.text.trim(),
+        'cedula': cedula.isNotEmpty ? cedula : 'Sin cédula', // Evita valores nulos
       });
 
       Get.snackbar(
@@ -486,9 +501,7 @@ void _showTerms(BuildContext context) {
   }
 
   String? _validateCedula(String? value) {
-    if (value == null || value.isEmpty)
-      return 'El numero de identidad es obligaroio';
-    if (value.length != 13) return 'Debe tener 13 dígitos';
+    if (value == null || value.isEmpty)return 'El numero de identidad es obligaroio';
     return null;
   }
 

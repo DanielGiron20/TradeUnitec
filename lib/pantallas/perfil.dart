@@ -138,6 +138,23 @@ class _PerfilState extends State<Perfil> {
                                   ),
                                 ),
                                 const Divider(),
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.person,
+                                    color: Color.fromARGB(255, 225, 38, 5),
+                                  ),
+                                  title: const Text(
+                                    'Cedula',
+                                    style: TextStyle(color: Color(0xFF003366)),
+                                  ),
+                                  subtitle: Text(
+                                    usuario.cedula,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
