@@ -194,7 +194,7 @@
                     child: const Text('Si acepto'),
                     onPressed: () {
                       Navigator.pop(context);
-                      _registerSeller(context);
+                      recursividad();
                     },
                   ),
                 ],
@@ -386,6 +386,9 @@
       );
     }
 
+void recursividad() {
+  _registerSeller(context);
+}
     Widget _buildRegisterButton(BuildContext context) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
@@ -409,7 +412,6 @@
         );
         return;
       }
-
      
       _showTerms(context);
     },
@@ -474,7 +476,8 @@
 
         await FirebaseFirestore.instance
             .collection('users')
-            .add({
+            .doc(userCredential.user!.uid)
+            .set({
           'uid': userCredential.user!.uid,
           'name': _nombreController.text.trim(),
           'correo': _correoController.text.trim(),
