@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:tradeunitec/Basededatos/db_helper.dart';
 import 'package:tradeunitec/Basededatos/usuario.dart';
 import 'package:tradeunitec/pantallas/agregar_producto.dart';
 import 'package:tradeunitec/pantallas/mis_productos.dart';
 import 'package:tradeunitec/pantallas/editar_perfil.dart';
+import 'package:tradeunitec/pantallas/rutas.dart';
+
 
 class Perfil extends StatefulWidget {
   const Perfil({Key? key}) : super(key: key);
@@ -45,6 +49,60 @@ class _PerfilState extends State<Perfil> {
       });
     }
   }
+
+Future<void> _logout() async {
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Cerrar sesion'),
+          content: const Text('¿Estás seguro que desea cerrar sesion?'),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.grey[600],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('No'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.grey[600],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Sí'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      try {
+        List<Usuario> usuarios =
+            (await DbHelper().getUsers()).cast<Usuario>();
+        if (usuarios.isNotEmpty) {
+          await DbHelper().deleteUser(usuarios.first.id);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            MyRoutes.PantallaPrincipal.name,
+            (Route<dynamic> route) => false,
+          );
+        }
+      } catch (e) {
+        Get.snackbar("Error", "Error al cerrar sesion");
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +287,28 @@ class _PerfilState extends State<Perfil> {
                             ),
                           ),
                           child: const Text('Ver mis productos'),
+                        ),
+                        const SizedBox(height: 20),
+                        // Botón para ver mis productos
+                        ElevatedButton(
+                          onPressed: () {
+                          
+
+                            _logout();
+
+                         
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 225, 38, 5),
+                            foregroundColor: const Color(0xFF003366),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text('Cerrar sesion'),
                         ),
                       ],
                     ),
