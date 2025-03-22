@@ -37,7 +37,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         Get.snackbar("Bienvenido", "Bienvenido ${currentUser.name}");
       } else {
         print("No hay usuarios disponibles");
-        Get.snackbar("Error", "No hay usuarios disponibles");
       }
     } catch (e) {
       print("Error al obtener el usuario: $e");
@@ -50,13 +49,13 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     home: Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Trade Unitec',
+          'Swapper',
           style: TextStyle(
-            color: Colors.white, // Texto blanco para contrastar con el azul
+            color: Colors.white, 
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color(0xFF003366), // Azul Unitec
+        backgroundColor: const Color(0xFF003366), 
         actions: [
           isLogged
               ? GestureDetector(
@@ -69,7 +68,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   ),
                 )
               : IconButton(
-                  icon: const Icon(Icons.person, color: Colors.white), // Icono blanco
+                  icon: const Icon(Icons.person, color: Colors.white), 
                   tooltip: 'Iniciar sesión',
                   onPressed: () {
                     Navigator.pushNamed(context, MyRoutes.Login.name).then((value) {
