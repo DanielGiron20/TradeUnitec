@@ -6,7 +6,7 @@ import 'package:tradeunitec/widgets/product_card.dart';
 class MisProductos extends StatelessWidget {
   final String uid;
 
-  const MisProductos({Key? key, required this.uid}) : super(key: key);
+  const MisProductos({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MisProductos extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 10),
-          SingleChildScrollView(
+          const SingleChildScrollView(
             scrollDirection: Axis.horizontal,
           ),
           const SizedBox(height: 10),

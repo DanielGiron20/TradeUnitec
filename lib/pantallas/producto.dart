@@ -123,7 +123,7 @@ class _PantallaProductoState extends State<PantallaProducto> {
                   )
                 : const CircleAvatar(
                     backgroundColor: Color(0xFFFFCC00), // Amarillo Unitec
-                    child: const Icon(
+                    child: Icon(
                       Icons.person,
                       color: Color(0xFF003366), // Azul Unitec
                     ),

@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 class AgregarProducto extends StatefulWidget {
   final String uid;
 
-  const AgregarProducto({Key? key, required this.uid}) : super(key: key);
+  const AgregarProducto({super.key, required this.uid});
 
   @override
   _AgregarProductoState createState() => _AgregarProductoState();
@@ -130,13 +130,13 @@ class _AgregarProductoState extends State<AgregarProducto> {
             // Campo de texto para el nombre del producto
             TextField(
               controller: _nombreController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nombre del Producto',
-                labelStyle: const TextStyle(color: Color(0xFF003366)),
-                focusedBorder: const OutlineInputBorder(
+                labelStyle: TextStyle(color: Color(0xFF003366)),
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF003366)),
                 ),
-                enabledBorder: const OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF003366)),
                 ),
               ),
@@ -144,13 +144,13 @@ class _AgregarProductoState extends State<AgregarProducto> {
             const SizedBox(height: 10),
             TextField(
               controller: _descripcionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Descripción',
-                labelStyle: const TextStyle(color: Color(0xFF003366)),
-                focusedBorder: const OutlineInputBorder(
+                labelStyle: TextStyle(color: Color(0xFF003366)),
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF003366)),
                 ),
-                enabledBorder: const OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF003366)),
                 ),
               ),
@@ -172,13 +172,13 @@ class _AgregarProductoState extends State<AgregarProducto> {
                   _categoria = value!;
                 });
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Categoría',
-                labelStyle: const TextStyle(color: Color(0xFF003366)),
-                focusedBorder: const OutlineInputBorder(
+                labelStyle: TextStyle(color: Color(0xFF003366)),
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF003366)),
                 ),
-                enabledBorder: const OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF003366)),
                 ),
               ),

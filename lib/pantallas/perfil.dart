@@ -10,7 +10,7 @@ import 'package:tradeunitec/pantallas/rutas.dart';
 
 
 class Perfil extends StatefulWidget {
-  const Perfil({Key? key}) : super(key: key);
+  const Perfil({super.key});
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -128,13 +128,13 @@ Future<void> _logout() async {
                 ),
               )
             : Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      const Color(0xFF003366),
-                      const Color.fromARGB(255, 23, 84, 188),
+                      Color(0xFF003366),
+                      Color.fromARGB(255, 23, 84, 188),
                     ],
                   ),
                 ),

@@ -88,13 +88,13 @@ class Login extends StatelessWidget {
         elevation: 0,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF003366), // Azul Unitec
-              const Color.fromARGB(255, 23, 84, 188),
+              Color(0xFF003366), // Azul Unitec
+              Color.fromARGB(255, 23, 84, 188),
             ],
           ),
         ),

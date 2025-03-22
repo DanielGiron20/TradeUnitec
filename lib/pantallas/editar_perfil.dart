@@ -11,7 +11,7 @@ import 'package:tradeunitec/Basededatos/usuario.dart';
 class EditarPerfil extends StatefulWidget {
   final Usuario usuario;
 
-  const EditarPerfil({Key? key, required this.usuario}) : super(key: key);
+  const EditarPerfil({super.key, required this.usuario});
 
   @override
   _EditarPerfilState createState() => _EditarPerfilState();
